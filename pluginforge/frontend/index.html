@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PluginForge AI - Minecraft Plugin Generator</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  
+  <!-- Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/syntax.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Left Panel - Projects -->
+    <aside id="left-panel" class="panel">
+      <div class="panel-header">
+        <div class="logo">
+          <span class="logo-icon">⚒️</span>
+          <div class="logo-text">
+            <h1>PluginForge AI</h1>
+            <span class="version">v1.0.0</span>
+          </div>
+        </div>
+        <button id="new-project-btn" class="btn btn-primary btn-full">
+          <span class="btn-icon">+</span> New Project
+        </button>
+      </div>
+      
+      <div class="search-container">
+        <input type="text" id="project-search" placeholder="Search projects..." class="search-input">
+        <span class="search-icon">🔍</span>
+      </div>
+      
+      <div id="project-list" class="project-list">
+        <!-- Projects will be rendered here -->
+      </div>
+      
+      <div class="panel-footer">
+        <button id="settings-btn" class="btn btn-ghost btn-full">
+          <span class="btn-icon">⚙️</span> Settings
+        </button>
+        <button id="import-btn" class="btn btn-ghost btn-full">
+          <span class="btn-icon">📥</span> Import JSON
+        </button>
+      </div>
+    </aside>
+
+    <!-- Middle Panel - Chat -->
+    <main id="main-panel" class="panel">
+      <div class="top-bar">
+        <div class="project-info">
+          <h2 id="active-project-name">No project selected</h2>
+          <span id="project-badges" class="badges"></span>
+        </div>
+        
+        <div class="controls">
+          <select id="mc-version-select" class="control-select">
+            <option value="1.21">MC 1.21</option>
+            <option value="1.20.6">MC 1.20.6</option>
+            <option value="1.20.4">MC 1.20.4</option>
+            <option value="1.20.1">MC 1.20.1</option>
+            <option value="1.19.4">MC 1.19.4</option>
+            <option value="1.18.2">MC 1.18.2</option>
+            <option value="1.17.1">MC 1.17.1</option>
+            <option value="1.16.5">MC 1.16.5</option>
+          </select>
+          
+          <select id="server-type-select" class="control-select">
+            <option value="Paper">Paper</option>
+            <option value="Spigot">Spigot</option>
+          </select>
+          
+          <select id="java-version-select" class="control-select">
+            <option value="21">Java 21</option>
+            <option value="17">Java 17</option>
+            <option value="16">Java 16</option>
+            <option value="11">Java 11</option>
+            <option value="8">Java 8</option>
+          </select>
+          
+          <select id="model-select" class="control-select">
+            <option value="kilo-auto/free">Kilo Auto (Free)</option>
+            <option value="arcee-ai/trinity-large-thinking:free">Trinity Large</option>
+            <option value="gpt-4o-mini">GPT-4o Mini</option>
+            <option value="claude-3-haiku">Claude 3 Haiku</option>
+          </select>
+          
+          <div class="reasoning-mode" title="Reasoning Mode">
+            <button class="reasoning-btn active" data-mode="LOW">🟢</button>
+            <button class="reasoning-btn" data-mode="MEDIUM">🟡</button>
+            <button class="reasoning-btn" data-mode="STRICT">🔴</button>
+          </div>
+        </div>
+      </div>
+      
+      <div id="pinned-messages" class="pinned-messages hidden">
+        <!-- Pinned messages will be rendered here -->
+      </div>
+      
+      <div id="chat-search-container" class="chat-search-container hidden">
+        <input type="text" id="chat-search" placeholder="Search chat..." class="chat-search-input">
+        <button id="chat-search-close" class="btn-icon-only">×</button>
+      </div>
+      
+      <div id="chat-history" class="chat-history">
+        <div class="welcome-message">
+          <h2>👋 Welcome to PluginForge AI</h2>
+          <p>Select a project from the left panel or create a new one to get started.</p>
+          <div class="quick-start">
+            <h3>Quick Start:</h3>
+            <ol>
+              <li>Click "New Project" to create a plugin</li>
+              <li>Describe your plugin idea in the chat</li>
+              <li>Review the generated code in the Files panel</li>
+              <li>Build and download your JAR</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chat-input-container">
+        <div class="chat-input-wrapper">
+          <textarea 
+            id="chat-input" 
+            placeholder="Describe your plugin idea... (Ctrl+Enter to send)"
+            rows="3"
+          ></textarea>
+          <div class="chat-actions">
+            <button id="undo-btn" class="btn-icon-only" title="Undo last generation">↩️</button>
+            <button id="clear-chat-btn" class="btn-icon-only" title="Clear chat">🗑️</button>
+            <button id="send-btn" class="btn btn-primary">
+              <span class="btn-icon">➤</span> Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Panel - Files & Build -->
+    <aside id="right-panel" class="panel">
+      <div class="tabs">
+        <button class="tab active" data-tab="files">📁 FILES</button>
+        <button class="tab" data-tab="build">🔨 BUILD</button>
+      </div>
+      
+      <!-- Files Tab -->
+      <div id="files-tab" class="tab-content active">
+        <div class="file-tree-container">
+          <div id="file-tree" class="file-tree">
+            <!-- File tree will be rendered here -->
+          </div>
+        </div>
+        
+        <div id="code-viewer" class="code-viewer hidden">
+          <div class="code-viewer-header">
+            <span id="current-file-path" class="file-path"></span>
+            <div class="code-actions">
+              <button id="copy-file-btn" class="btn-icon-only" title="Copy file">📋</button>
+              <button id="download-file-btn" class="btn-icon-only" title="Download file">⬇️</button>
+              <div class="font-size-control">
+                <button class="font-btn" data-size="S">S</button>
+                <button class="font-btn active" data-size="M">M</button>
+                <button class="font-btn" data-size="L">L</button>
+              </div>
+            </div>
+          </div>
+          <pre><code id="code-content" class="language-java"></code></pre>
+        </div>
+        
+        <div class="file-actions">
+          <button id="download-zip-btn" class="btn btn-secondary btn-full">
+            <span class="btn-icon">📦</span> Download ZIP
+          </button>
+          <button id="build-download-jar-btn" class="btn btn-primary btn-full">
+            <span class="btn-icon">🔨</span> Build & Download JAR
+          </button>
+        </div>
+      </div>
+      
+      <!-- Build Tab -->
+      <div id="build-tab" class="tab-content">
+        <div class="build-status" id="build-status">
+          <span class="status-indicator idle"></span>
+          <span class="status-text">Idle</span>
+        </div>
+        
+        <div id="build-log" class="build-log">
+          <div class="log-placeholder">No build logs yet. Click "Build" to start.</div>
+        </div>
+        
+        <div id="auto-fix-status" class="auto-fix-status hidden">
+          🔄 Auto-fixing... attempt <span id="auto-fix-attempt">1</span>/3
+        </div>
+        
+        <div class="build-history-container">
+          <h3>Build History</h3>
+          <div id="build-history" class="build-history">
+            <!-- Build history items will be rendered here -->
+          </div>
+        </div>
+        
+        <button id="download-jar-btn" class="btn btn-success btn-full" disabled>
+          <span class="btn-icon">⬇️</span> Download JAR
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Modals -->
+  
+  <!-- New Project Modal -->
+  <div id="new-project-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Create New Project</h2>
+        <button class="modal-close">×</button>
+      </div>
+      <form id="new-project-form">
+        <div class="form-group">
+          <label for="project-name">Plugin Name *</label>
+          <input type="text" id="project-name" required placeholder="MyAwesomePlugin">
+        </div>
+        <div class="form-group">
+          <label for="project-description">Description</label>
+          <textarea id="project-description" rows="2" placeholder="A brief description of your plugin"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="new-mc-version">Minecraft Version</label>
+            <select id="new-mc-version">
+              <option value="1.21">1.21</option>
+              <option value="1.20.6">1.20.6</option>
+              <option value="1.20.4">1.20.4</option>
+              <option value="1.20.1">1.20.1</option>
+              <option value="1.19.4">1.19.4</option>
+              <option value="1.18.2">1.18.2</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="new-server-type">Server Type</label>
+            <select id="new-server-type">
+              <option value="Paper">Paper</option>
+              <option value="Spigot">Spigot</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="new-java-version">Java Version</label>
+            <select id="new-java-version">
+              <option value="21">Java 21</option>
+              <option value="17" selected>Java 17</option>
+              <option value="11">Java 11</option>
+              <option value="8">Java 8</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="new-model">AI Model</label>
+            <select id="new-model">
+              <option value="kilo-auto/free">Kilo Auto (Free)</option>
+              <option value="arcee-ai/trinity-large-thinking:free">Trinity Large</option>
+              <option value="gpt-4o-mini">GPT-4o Mini</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="new-reasoning-mode">Reasoning Mode</label>
+          <div class="reasoning-mode-select">
+            <label><input type="radio" name="reasoning" value="LOW"> 🟢 Low (Fast)</label>
+            <label><input type="radio" name="reasoning" value="MEDIUM" checked> 🟡 Medium</label>
+            <label><input type="radio" name="reasoning" value="STRICT"> 🔴 Strict</label>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button class="modal-close">×</button>
+      </div>
+      <form id="settings-form">
+        <div class="form-group">
+          <label for="api-key">Kilo API Key *</label>
+          <input type="password" id="api-key" placeholder="Enter your API key">
+          <small>Get your API key from <a href="https://kilo.ai" target="_blank">kilo.ai</a></small>
+        </div>
+        <div class="form-group">
+          <label for="default-model">Default Model</label>
+          <select id="default-model">
+            <option value="kilo-auto/free">Kilo Auto (Free)</option>
+            <option value="arcee-ai/trinity-large-thinking:free">Trinity Large</option>
+            <option value="gpt-4o-mini">GPT-4o Mini</option>
+            <option value="claude-3-haiku">Claude 3 Haiku</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="default-reasoning">Default Reasoning Mode</label>
+          <select id="default-reasoning">
+            <option value="LOW">🟢 Low (Fast)</option>
+            <option value="MEDIUM" selected>🟡 Medium</option>
+            <option value="STRICT">🔴 Strict</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="default-mc-version">Default MC Version</label>
+          <select id="default-mc-version">
+            <option value="1.21">1.21</option>
+            <option value="1.20.6">1.20.6</option>
+            <option value="1.20.4">1.20.4</option>
+            <option value="1.20.1">1.20.1</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Diff Viewer Modal -->
+  <div id="diff-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2>File Changes</h2>
+        <button class="modal-close">×</button>
+      </div>
+      <div id="diff-content" class="diff-content">
+        <!-- Diff will be rendered here -->
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-primary modal-close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div id="confirm-delete-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h2>Delete Project</h2>
+        <button class="modal-close">×</button>
+      </div>
+      <p id="delete-confirm-text">Are you sure you want to delete this project?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost modal-cancel">Cancel</button>
+        <button type="button" id="confirm-delete-btn" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Hidden file input for import -->
+  <input type="file" id="import-file-input" accept=".json" style="display: none;">
+
+  <!-- Scripts -->
+  <script src="js/toast.js"></script>
+  <script src="js/diff.js"></script>
+  <script src="js/shortcuts.js"></script>
+  <script src="js/fileTree.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/build.js"></script>
+  <script src="js/projects.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

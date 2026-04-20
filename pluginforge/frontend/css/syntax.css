@@ -1,0 +1,181 @@
+/* Syntax Highlighting Overrides */
+
+/* Code blocks in chat messages */
+.message-content pre code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+/* Inline code */
+.message-content :not(pre) > code {
+  background: var(--bg-hover);
+  color: var(--accent);
+}
+
+/* Highlight.js theme overrides for dark mode */
+.hljs {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #6a737d !important;
+}
+
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #f97583 !important;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #9ecbff !important;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #dcbdfb !important;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: #ffab70 !important;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: var(--java) !important;
+}
+
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-attribute {
+  color: #79b8ff !important;
+}
+
+.hljs-number,
+.hljs-regexp {
+  color: #b392f0 !important;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #ffab70 !important;
+}
+
+.hljs-meta {
+  color: #f97583 !important;
+}
+
+.hljs-deletion {
+  background: rgba(255, 68, 68, 0.2);
+}
+
+.hljs-addition {
+  background: rgba(0, 255, 136, 0.2);
+}
+
+/* Diff viewer styles */
+.diff-content {
+  font-family: var(--font-code);
+  font-size: 13px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.diff-line {
+  padding: 2px 8px;
+  font-family: var(--font-code);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.diff-line-added {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--success);
+}
+
+.diff-line-removed {
+  background: rgba(255, 68, 68, 0.15);
+  color: var(--error);
+}
+
+.diff-line-unchanged {
+  color: var(--text-muted);
+}
+
+.diff-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-hover);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* Build log syntax highlighting */
+.build-log .log-line {
+  font-family: var(--font-code);
+}
+
+.build-log .log-line.error {
+  color: var(--error);
+}
+
+.build-log .log-line.warn {
+  color: var(--warning);
+}
+
+.build-log .log-line.info {
+  color: var(--text-muted);
+}
+
+/* Code viewer line numbers (if we add them later) */
+.code-viewer pre {
+  counter-reset: line;
+}
+
+.code-viewer code {
+  counter-reset: line;
+}
+
+.code-viewer .line {
+  counter-increment: line;
+}
+
+.code-viewer .line::before {
+  content: counter(line);
+  display: inline-block;
+  width: 30px;
+  margin-right: var(--spacing-md);
+  color: var(--text-dim);
+  text-align: right;
+  user-select: none;
+}
+
+/* Copy button on code blocks */
+.code-copy-btn {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.message-content pre:hover .code-copy-btn {
+  opacity: 1;
+}
+
+/* File icon colors */
+.file-icon-java { color: var(--java); }
+.file-icon-xml { color: #f89820; }
+.file-icon-yml { color: #cbcb47; }
+.file-icon-json { color: #cbcb47; }
+.file-icon-md { color: #519aba; }
+.file-icon-txt { color: var(--text-muted); }
+.file-icon-folder { color: var(--text-muted); }
+.file-icon-folder-open { color: var(--accent); }

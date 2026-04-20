@@ -1,0 +1,20 @@
+{
+  "name": "pluginforge-ai",
+  "version": "1.0.0",
+  "description": "Agentic Minecraft Java plugin generator",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "setup": "node setup.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "ws": "^8.14.2",
+    "chokidar": "^3.5.3",
+    "archiver": "^6.0.1",
+    "uuid": "^9.0.1",
+    "fs-extra": "^11.2.0"
+  }
+}
