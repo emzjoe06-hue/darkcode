@@ -1,0 +1,8 @@
+{
+  "apiKey": "",
+  "defaultModel": "kilo-auto/free",
+  "defaultReasoningMode": "MEDIUM",
+  "defaultMcVersion": "1.21",
+  "defaultServerType": "Paper",
+  "defaultJavaVersion": "17"
+}
